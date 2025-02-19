@@ -72,8 +72,8 @@ const playCard = ({ G, ctx }, index) => {
   logPlay(G, ctx, card);
 };
 
-export const WizardDuel = {
-  name: "arcane-duels",
+export const ArcaneDuels = {
+  name: "arcane-duels-mystic-clash",
 
   setup: setupData,
 

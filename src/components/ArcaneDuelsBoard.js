@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-import useAudioPlayer from './hooks/useAudioPlayer';
-import useMusicPlayer from './hooks/useMusicPlayer';
-import useBsTooltip from './hooks/useBsTooltip';
-import useLog from './hooks/useLog';
-import { sleep } from './utils/utils';
-import { GameState, pauseInterval } from './utils/constants';
+import useAudioPlayer from "./hooks/useAudioPlayer";
+import useMusicPlayer from "./hooks/useMusicPlayer";
+import useBsTooltip from "./hooks/useBsTooltip";
+import useLog from "./hooks/useLog";
+import { sleep } from "./utils/utils";
+import { GameState, pauseInterval } from "./utils/constants";
 import {
   cardAudio,
   click,
@@ -15,27 +15,27 @@ import {
   defrost,
   getLocationForLevel,
   getMusicForLevel,
-} from './utils/assetPaths';
-import { random } from './utils/ai';
-import { CardKeyword } from '../data/cards';
-import { EffectType } from '../data/cardEffects';
+} from "./utils/assetPaths";
+import { random } from "./utils/ai";
+import { CardKeyword } from "../data/cards";
+import { EffectType } from "../data/cardEffects";
 
-import CardPile from './CardPile';
-import CardPreview from './CardPreview';
-import EffectStack from './EffectStack';
-import EndTurnButton from './EndTurnButton';
-import GameoverModal from './modals/GameoverModal';
-import HelpModal from './modals/HelpModal';
-import LevelEffectModal from './modals/LevelEffectModal';
-import LogModal from './modals/LogModal';
-import IconList from './IconList';
-import MatchupModal from './modals/MatchupModal';
-import NextLevelModal from './modals/NextLevelModal';
-import PlayerHand from './PlayerHand';
-import PlayerStats from './PlayerStats';
-import SettingsModal from './modals/SettingsModal';
+import CardPile from "./CardPile";
+import CardPreview from "./CardPreview";
+import EffectStack from "./EffectStack";
+import EndTurnButton from "./EndTurnButton";
+import GameoverModal from "./modals/GameoverModal";
+import HelpModal from "./modals/HelpModal";
+import LevelEffectModal from "./modals/LevelEffectModal";
+import LogModal from "./modals/LogModal";
+import IconList from "./IconList";
+import MatchupModal from "./modals/MatchupModal";
+import NextLevelModal from "./modals/NextLevelModal";
+import PlayerHand from "./PlayerHand";
+import PlayerStats from "./PlayerStats";
+import SettingsModal from "./modals/SettingsModal";
 
-const WizardDuelBoard = ({ ctx, G, moves, events, reset }) => {
+const ArcaneDuelsBoard = ({ ctx, G, moves, events, reset }) => {
   // Initialize Bootstrap tooltips
   useBsTooltip();
 
@@ -94,7 +94,7 @@ const WizardDuelBoard = ({ ctx, G, moves, events, reset }) => {
 
     moves.drawCard();
 
-    if (ctx.turn > 1 && ctx.currentPlayer === '0') {
+    if (ctx.turn > 1 && ctx.currentPlayer === "0") {
       setGameState(GameState.endTurnDisabled);
     }
   };
@@ -104,7 +104,7 @@ const WizardDuelBoard = ({ ctx, G, moves, events, reset }) => {
       return;
     }
 
-    if (ctx.currentPlayer === '1' && G.players[1].hand.length === 5) {
+    if (ctx.currentPlayer === "1" && G.players[1].hand.length === 5) {
       // Interval between draw and play
       if (ctx.turn === 2) {
         await sleep(pauseInterval * 2); // x2 since AI does not draw in first turn
@@ -136,7 +136,7 @@ const WizardDuelBoard = ({ ctx, G, moves, events, reset }) => {
       }
       setShowGameoverModal(true);
       pauseMusic();
-      playAudio(ctx.gameover.winner === '0' ? victory : defeat);
+      playAudio(ctx.gameover.winner === "0" ? victory : defeat);
     }
     // Not needed if game restart is implemented via a full page reload
     // else {
@@ -183,11 +183,11 @@ const WizardDuelBoard = ({ ctx, G, moves, events, reset }) => {
 
   return (
     <div
-      className='container-fluid vh-100 d-flex flex-column p-2 bg-board'
-      style={{ '--bg-image': `url(/${getLocationForLevel(G.level)})` }}
+      className="container-fluid vh-100 d-flex flex-column p-2 bg-board"
+      style={{ "--bg-image": `url(/${getLocationForLevel(G.level)})` }}
     >
-      <div className='row'>
-        <div className='col-3'>
+      <div className="row">
+        <div className="col-3">
           <PlayerStats
             player={G.players[1]}
             level={G.level}
@@ -195,11 +195,11 @@ const WizardDuelBoard = ({ ctx, G, moves, events, reset }) => {
           />
         </div>
 
-        <div className='col-6'>
+        <div className="col-6">
           <PlayerHand player={G.players[1]} />
         </div>
 
-        <div className='col-3'>
+        <div className="col-3">
           <IconList
             setShowLevelEffectModal={setShowLevelEffectModal}
             setShowLogModal={setShowLogModal}
@@ -210,8 +210,8 @@ const WizardDuelBoard = ({ ctx, G, moves, events, reset }) => {
         </div>
       </div>
 
-      <div className='row flex-grow-1'>
-        <div className='col-3'>
+      <div className="row flex-grow-1">
+        <div className="col-3">
           <EffectStack
             opponentEffects={G.players[1].effects}
             playerEffects={G.players[0].effects}
@@ -219,28 +219,28 @@ const WizardDuelBoard = ({ ctx, G, moves, events, reset }) => {
           />
         </div>
 
-        <div className='col-6'>
+        <div className="col-6">
           <CardPreview selectedCard={selectedCard} />
         </div>
 
-        <div className='col-3'>
+        <div className="col-3">
           <CardPile />
         </div>
       </div>
 
-      <div className='row align-items-end'>
-        <div className='col-3'>
+      <div className="row align-items-end">
+        <div className="col-3">
           <PlayerStats
             player={G.players[0]}
             setHoveredAvatar={setHoveredAvatar}
           />
         </div>
 
-        <div className='col-6'>
+        <div className="col-6">
           <PlayerHand player={G.players[0]} handleCardClick={handleCardClick} />
         </div>
 
-        <div className='col-3'>
+        <div className="col-3">
           <EndTurnButton
             gameState={gameState}
             handleEndTurnButtonClick={handleEndTurnButtonClick}
@@ -294,4 +294,4 @@ const WizardDuelBoard = ({ ctx, G, moves, events, reset }) => {
   );
 };
 
-export default WizardDuelBoard;
+export default ArcaneDuelsBoard;
