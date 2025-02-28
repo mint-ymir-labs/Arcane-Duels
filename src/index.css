@@ -185,3 +185,31 @@
   pointer-events: none;
   overflow: hidden;
 }
+
+/* Battle Log Styles */
+.battle-log {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.battle-log::-webkit-scrollbar {
+  width: 6px;
+}
+
+.battle-log::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.battle-log::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.log-entry {
+  transition: all 0.2s ease-in-out;
+}
+
+.log-entry:hover {
+  transform: translateX(5px);
+  background-color: rgba(255, 255, 255, 0.2) !important;
+}

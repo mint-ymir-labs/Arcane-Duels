@@ -4,6 +4,7 @@ import usePreloadAssets from "./hooks/usePreloadAssets";
 import { cardFronts, click, IMAGES, AUDIO, MUSIC } from "./utils/assetPaths";
 import CardGalleryModal from "./modals/CardGalleryModal";
 import HelpModal from "./modals/HelpModal";
+import AboutModal from "./modals/AboutModal";
 
 const MainMenu = () => {
   // Preload to use cache and reduce latency
@@ -11,6 +12,7 @@ const MainMenu = () => {
 
   const [showHelpModal, setShowHelpModal] = useState(false);
   const [showCardGallery, setShowCardGallery] = useState(false);
+  const [showAboutModal, setShowAboutModal] = useState(false);
 
   const { playAudio } = useAudioPlayer();
 
@@ -30,7 +32,8 @@ const MainMenu = () => {
   };
 
   const handleAboutClick = () => {
-    window.open("https://github.com/arcane-duels", "_blank");
+    setShowAboutModal(true);
+    playAudio(click);
   };
 
   return (
@@ -82,6 +85,11 @@ const MainMenu = () => {
         showCardGallery={showCardGallery}
         setShowCardGallery={setShowCardGallery}
         cardImages={cardFronts}
+        playAudio={playAudio}
+      />
+      <AboutModal
+        showAboutModal={showAboutModal}
+        setShowAboutModal={setShowAboutModal}
         playAudio={playAudio}
       />
     </div>

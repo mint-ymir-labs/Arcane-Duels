@@ -34,6 +34,7 @@ import NextLevelModal from "./modals/NextLevelModal";
 import PlayerHand from "./PlayerHand";
 import PlayerStats from "./PlayerStats";
 import SettingsModal from "./modals/SettingsModal";
+import BattleLog from "./BattleLog";
 
 const ArcaneDuelsBoard = ({ ctx, G, moves, events, reset }) => {
   // Initialize Bootstrap tooltips
@@ -215,11 +216,16 @@ const ArcaneDuelsBoard = ({ ctx, G, moves, events, reset }) => {
 
       <div className="row flex-grow-1">
         <div className="col-3">
-          <EffectStack
-            opponentEffects={G.players[1].effects}
-            playerEffects={G.players[0].effects}
-            hoveredAvatar={hoveredAvatar}
-          />
+          <div className="d-flex flex-column h-100">
+            <EffectStack
+              opponentEffects={G.players[1].effects}
+              playerEffects={G.players[0].effects}
+              hoveredAvatar={hoveredAvatar}
+            />
+            <div className="flex-grow-1 d-flex align-items-center">
+              {/* <BattleLog logEntries={logEntries} /> */}
+            </div>
+          </div>
         </div>
 
         <div className="col-6">
