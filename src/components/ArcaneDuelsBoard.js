@@ -50,6 +50,7 @@ const ArcaneDuelsBoard = ({ ctx, G, moves, events, reset }) => {
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showHelpModal, setShowHelpModal] = useState(false);
   const [showMatchupModal, setShowMatchupModal] = useState(true);
+  const [shouldAnimatePreview, setShouldAnimatePreview] = useState(false);
 
   const { logEntries, addLogEntry } = useLog();
   const { playAudio, toggleAudioMute } = useAudioPlayer();
@@ -80,6 +81,31 @@ const ArcaneDuelsBoard = ({ ctx, G, moves, events, reset }) => {
     }
   };
 
+  const handleCardClick = async (index) => {
+    if (gameState !== GameState.aiTurn) {
+      setSelectedCard(G.players[0].hand[index]);
+      setPlayerSelectedIndex(index);
+      playAudio(click);
+      setGameState(GameState.endTurnEnabled);
+    }
+  };
+
+  const handleEndTurnButtonClick = () => {
+    if (gameState === GameState.endTurnEnabled) {
+      setShouldAnimatePreview(true);
+      moves.playCard(playerSelectedIndex);
+      playCardAudio(selectedCard);
+      addLogEntry(
+        ctx.turn,
+        G.players[0].name,
+        G.players[0].hand[playerSelectedIndex].name,
+        G.players[0].hand[playerSelectedIndex].text
+      );
+
+      setGameState(GameState.aiTurn);
+    }
+  };
+
   const handleDrawCard = async () => {
     if (ctx.gameover) {
       return;
@@ -89,6 +115,7 @@ const ArcaneDuelsBoard = ({ ctx, G, moves, events, reset }) => {
       await sleep(pauseInterval); // Preview card duration
       setSelectedCard(null);
       setPlayerSelectedIndex(null);
+      setShouldAnimatePreview(false); // 重置动画状态
       await sleep(pauseInterval); // Interval between preview and draw
     }
 
@@ -115,6 +142,7 @@ const ArcaneDuelsBoard = ({ ctx, G, moves, events, reset }) => {
       const aiSelectedIndex = random();
       const aiSelectedCard = G.players[1].hand[aiSelectedIndex];
       setSelectedCard(aiSelectedCard);
+      setShouldAnimatePreview(true);
 
       moves.playCard(aiSelectedIndex);
       playCardAudio(aiSelectedCard);
@@ -156,31 +184,6 @@ const ArcaneDuelsBoard = ({ ctx, G, moves, events, reset }) => {
     handleShowGameoverModal();
   }, [ctx.gameover]);
 
-  const handleCardClick = async (index) => {
-    if (gameState !== GameState.aiTurn) {
-      setSelectedCard(G.players[0].hand[index]);
-      setPlayerSelectedIndex(index);
-      playAudio(click);
-
-      setGameState(GameState.endTurnEnabled);
-    }
-  };
-
-  const handleEndTurnButtonClick = () => {
-    if (gameState === GameState.endTurnEnabled) {
-      moves.playCard(playerSelectedIndex);
-      playCardAudio(selectedCard);
-      addLogEntry(
-        ctx.turn,
-        G.players[0].name,
-        G.players[0].hand[playerSelectedIndex].name,
-        G.players[0].hand[playerSelectedIndex].text
-      );
-
-      setGameState(GameState.aiTurn);
-    }
-  };
-
   return (
     <div
       className="container-fluid vh-100 d-flex flex-column p-2 bg-board"
@@ -220,7 +223,10 @@ const ArcaneDuelsBoard = ({ ctx, G, moves, events, reset }) => {
         </div>
 
         <div className="col-6">
-          <CardPreview selectedCard={selectedCard} />
+          <CardPreview
+            selectedCard={selectedCard}
+            shouldAnimate={shouldAnimatePreview}
+          />
         </div>
 
         <div className="col-3">

@@ -1,7 +1,7 @@
 import { CardType, smallScale, cardHeight, cardWidth } from "./utils/constants";
 import { cardFront, cardBack, cardPlaceholder } from "./utils/assetPaths";
 import { CardKeyword } from "../data/cards";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Card = ({
   cardType = CardType.placeholder,
@@ -11,6 +11,7 @@ const Card = ({
   handleCardClick = () => {},
   scale = smallScale,
   card = null,
+  shouldAnimate = false,
 }) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const frontImg = cardFront(cardId);
@@ -19,6 +20,15 @@ const Card = ({
 
   const height = cardHeight * scale;
   const width = cardWidth * scale;
+
+  // 监听shouldAnimate属性变化
+  useEffect(() => {
+    if (shouldAnimate && card) {
+      setIsAnimating(true);
+      const timer = setTimeout(() => setIsAnimating(false), 1500); // 增加动画时间到1.5秒
+      return () => clearTimeout(timer);
+    }
+  }, [shouldAnimate, card]);
 
   const getEffectClassName = () => {
     if (!card || !card.keywords) return "";
@@ -57,8 +67,6 @@ const Card = ({
   };
 
   const handleClick = () => {
-    setIsAnimating(true);
-    setTimeout(() => setIsAnimating(false), 1000);
     handleCardClick(cardIndex);
   };
 
